@@ -15,6 +15,7 @@ const Hero = () => {
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
           Donde cada acción <br />
           <span className="italic">echa raíces</span>
+          
         </h1>
       </div>
     </section>
