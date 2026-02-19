@@ -35,6 +35,7 @@ const Navbar = () => {
                         <Link to="/" className="hover:text-verde-bosque transition-colors">Inicio</Link>
                         <a href="#" className="hover:text-verde-bosque transition-colors">Causas</a>
                         <Link to="/about-us" className="hover:text-verde-bosque transition-colors">Nosotros</Link>
+                        <Link to="/para-creadores" className="hover:text-verde-bosque transition-colors">Para los creadores</Link>
                           {usuario ? (
         <div className="relative inline-block text-left">
             <button
