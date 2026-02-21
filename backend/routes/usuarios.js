@@ -1,6 +1,11 @@
 import express from 'express';
 import { db } from '../db.js';
+import jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import { verifyToken } from '../middleware/validacionToken.js';
+
+dotenv.config();
 
 const router = express.Router();
 
@@ -34,10 +39,11 @@ router.post('/login', (req, res) => {
     const user = results[0];
 
     if (!results || results.length === 0) {
-      return res.status(404).json({ error: 'Usuario no encontrado, revise sus datos' });
+      return res.status(404).json({ error: 'Usuario no encontrado, revise el correo' });
     }
 
     bcrypt.compare(password, user.password, function(err, result){
+
       if(err){
         return res.status(500).json({ error: 'Error al verificar la contraseña' });
       }
@@ -45,6 +51,21 @@ router.post('/login', (req, res) => {
       if(!result){
         return res.status(401).json({error: 'Contraseña incorrecta'});
       }
+
+      const token = jwt.sign({
+        id: user.id_usuario,
+        nombre: user.nombre
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '2h' }
+      )
+
+      res.cookie('token', token, { 
+        httpOnly: true, 
+        secure: false, 
+        sameSite: 'lax',
+        maxAge: 2 * 60 * 60 * 1000
+      });
 
       res.json({ id: user.id, nombre: user.nombre });
     });
@@ -107,8 +128,9 @@ router.post('/register', (req, res) => {
 });
 
 
-router.get("/ ", (req, res) => {
-  
-})
+router.post('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ message: 'Sesión cerrada' });
+});
 
 export default router;

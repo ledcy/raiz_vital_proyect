@@ -1,14 +1,23 @@
 import express from 'express';
 import cors from 'cors';
 import usuariosRouter from './routes/usuarios.js';
+import cookieParser from 'cookie-parser';
+import authRouter from './routes/auth.js';
 
 const app = express();
 
-app.use(cors());
-app.use(express.json()); 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
-app.use('/api/usuarios', usuariosRouter)
-console.log('Rutas de usuarios cargadas', usuariosRouter.stack.map(r => r.route.path));
+app.use(express.json());
+app.use(cookieParser());
+
+//Api routes para usarios y cerrar sesión
+app.use('/api/usuarios', usuariosRouter);
+//api route para verificar token
+app.use('/api/auth', authRouter);
 
 app.listen(3001, () => {
   console.log('Backend corriendo en puerto 3001');
