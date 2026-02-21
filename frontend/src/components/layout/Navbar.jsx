@@ -1,18 +1,35 @@
 import { useState } from 'react';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
+import { useAuth } from '../../../routes/authContext.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [menuAbierto, setMenuAbierto] = useState(false);
-    const [usuario, setUsuario] = useState(JSON.parse(localStorage.getItem('usuario')) || null);
     const navigate = useNavigate();
+    const { usuario } = useAuth();
 
-    function handleLogout() {
-        localStorage.removeItem('usuario');
-        setUsuario(null);
-        navigate('/');
+    async function handleLogout() {
+        try{
+            const restApi = await fetch('http://localhost:3001/api/usuarios/logout', {
+            method: 'POST',
+            credentials: 'include'
+            });
+
+            const data = await restApi.json();
+            
+            if(restApi.ok) {
+                window.location.href = '/';
+            }
+            else{
+                console.error('Error al cerrar sesión:', data.error || 'Error desconocido');
+            }
+        }
+        catch(error){
+            console.error('Error al cerrar sesión:', error);
+        }
+        
     }
 
     return (
