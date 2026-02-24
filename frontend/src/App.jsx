@@ -1,14 +1,17 @@
-import { Routes, Route } from 'react-router-dom'
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/footer.jsx';
-import Home from './pages/home'
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/layout/Navbar";
+import Footer from "./components/layout/footer.jsx";
+import Home from "./pages/home";
 import AboutUs from "./pages/about-us.jsx";
 import NotFound from "./pages/404.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
-import Sileo from './assets/sileo.jsx';
+import Profile from "./pages/profile.jsx";
+import ParaCreadores from "./pages/para-creadores.jsx";
+import Sileo from "./assets/sileo.jsx";
 
-import PublicRoute from '../routes/PublicRoute.jsx';
+import PublicRoute from "../routes/PublicRoute.jsx";
+import PrivateRoute from "../routes/privateRoute.jsx";
 
 function App() {
   return (
@@ -28,15 +31,23 @@ function App() {
           }
         />
 
-        <Route path="/register" element={<Register />} />
+        <Route path="/para-creadores" element={<ParaCreadores />} />
 
+        <Route path="/register" element={<Register />} />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
-
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -107,7 +107,7 @@ const Navbar = () => {
                     <div className="absolute right-0 mt-3 w-56 bg-white/95 backdrop-blur-sm rounded-[1.5rem] shadow-xl border border-gray-100 z-20 overflow-hidden">
                       <div className="py-2">
                         <Link
-                          to="/perfil"
+                          to="/profile"
                           className="flex items-center gap-3 px-5 py-3 text-sm text-gray-700 hover:bg-[#f0f5f0] hover:text-[#2d5a27]"
                         >
                           <span className="font-medium">Mi Perfil</span>
@@ -214,7 +214,7 @@ const Navbar = () => {
                     </span>
                   </div>
                   <Link
-                    to="/perfil"
+                    to="/profile"
                     onClick={() => setIsOpen(false)}
                     className="w-full py-2 text-gray-600 bg-gray-50 rounded-lg font-medium"
                   >
