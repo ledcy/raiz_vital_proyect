@@ -1,0 +1,137 @@
+import React, { useState } from "react";
+
+const ParaCreadores = () => {
+  const [showForm, setShowForm] = useState(false);
+
+  return (
+    <section className="bg-white py-16 px-8 md:px-20 font-sans text-[#1a2e1a]">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-serif italic mb-6 text-[#1a2e1a]">
+              Crea experiencias <br />
+              <span className="text-[#3d5a3d]">con propósito.</span>
+            </h2>
+            <p className="text-lg text-gray-600 leading-relaxed mb-8">
+              Buscamos creadores que deseen transformar el bienestar en acciones
+              concretas. Al registrar tu evento en nuestra plataforma, conectas
+              con una comunidad comprometida con la sostenibilidad y el
+              crecimiento personal.
+            </p>
+
+            <button
+              onClick={() => setShowForm(true)}
+              className="bg-[#1a2e1a] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#2d4d2d] transition-all shadow-lg"
+            >
+              Registrar nuevo evento
+            </button>
+          </div>
+
+          <div className="relative">
+            <div className="bg-[#f3f5f3] rounded-2xl h-80 w-full flex items-center justify-center border border-gray-100">
+              <p className="text-gray-400 italic">
+                Espacio para ilustración o fotografía
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className={`${
+            showForm ? "block" : "hidden"
+          } transition-all duration-500 ease-in-out`}
+        >
+          <div className="bg-[#f9fbf9] border border-gray-200 rounded-3xl p-8 md:p-12 shadow-sm">
+            <div className="flex justify-between items-center mb-8">
+              <h3 className="text-2xl font-bold">Detalles del Evento</h3>
+              <button
+                onClick={() => setShowForm(false)}
+                className="text-gray-400 hover:text-red-500 text-sm"
+              >
+                ✕ Cancelar
+              </button>
+            </div>
+
+            <form className="grid md:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Nombre del Evento
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ej. Taller de Reforestación"
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Fecha
+                </label>
+                <input
+                  type="date"
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                />
+              </div>
+
+              <div className="flex flex-col md:col-span-2">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Descripción breve
+                </label>
+                <textarea
+                  rows="3"
+                  placeholder="Cuéntanos sobre el impacto de este evento..."
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                ></textarea>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Ubicación / Link
+                </label>
+                <input
+                  type="text"
+                  placeholder="Presencial o Virtual"
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Categoría
+                </label>
+                <select className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
+                  <option>Sostenibilidad</option>
+                  <option>Bienestar</option>
+                  <option>Educación</option>
+                </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Subcategoría
+                </label>
+                <select className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
+                  <option>Sostenibilidad</option>
+                  <option>Bienestar</option>
+                  <option>Educación</option>
+                </select>
+              </div>
+
+              <div className="md:col-span-2 pt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-[#3d5a3d] text-white py-4 rounded-xl font-bold hover:shadow-xl transition-all"
+                >
+                  Publicar Evento
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ParaCreadores;

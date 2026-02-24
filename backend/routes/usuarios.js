@@ -80,7 +80,7 @@ router.post("/login", (req, res) => {
         maxAge: 2 * 60 * 60 * 1000,
       });
 
-      res.json({ id: user.id, nombre: user.nombre });
+      res.json({ id: user.id_usuario, nombre: user.nombre });
     });
   });
 });
@@ -167,6 +167,21 @@ router.get("/users", (req, res) => {
     }
 
     res.json(results);
+  });
+});
+
+
+router.get("/profile", verifyToken, (req, res) => {
+  const userId = req.user.id;
+  const sql = "SELECT id_usuario, nombre, email FROM usuario WHERE id_usuario = ?";
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Error al obtener el perfil" });
+    }
+    if(results.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+    res.json(results[0]);
   });
 });
 

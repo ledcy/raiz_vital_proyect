@@ -7,11 +7,16 @@ function Register() {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
+
+     if (loading) return; 
+    setLoading(true);
 
     try {
       const res = await fetch("http://localhost:3001/api/usuarios/register", {
@@ -31,15 +36,13 @@ function Register() {
             ? "Tu cuenta ha sido creada exitosamente."
             : data.error || "Ocurrió un error durante el registro.",
           type: res.ok ? "success" : "error",
-          button: {
-            title: "Inicia sesión ahora",
-            onClick: () => {
-              if (res.ok) {
-                navigate("/login");
-              }
-            },
-          },
+
         });
+
+        setInterval(() => {
+          window.location.href = "/login";
+        }, 2000);
+
       } else {
         sileo.error({
           title: "Error al registrar",
@@ -50,6 +53,9 @@ function Register() {
     } catch (error) {
       console.error(error);
       alert("Error al registrar");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -139,10 +145,11 @@ function Register() {
 
           <div className="pt-2">
             <button
+              disabled={loading}
               type="submit"
-              className="w-full bg-[#2d5a27] hover:bg-[#23461f] text-white text-[16px] font-bold py-3 px-6 rounded-full shadow-sm transition-colors duration-200"
+              className="w-full bg-[#2d5a27] hover:bg-[#23461f] text-white text-[16px] font-bold py-3 px-6 rounded-full shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Continuar
+              {loading ? "Registrando..." : "Continuar"}
             </button>
           </div>
         </form>

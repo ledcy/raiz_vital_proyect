@@ -21,6 +21,6 @@ app.use("/api/usuarios", usuariosRouter);
 //api route para verificar token
 app.use("/api/auth", authRouter);
 
-app.listen(3001, () => {
+app.listen(3001, '0.0.0.0', () => {
   console.log("Backend corriendo en puerto 3001");
 });
