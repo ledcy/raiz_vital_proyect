@@ -14,76 +14,81 @@ const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 router.post("/login", (req, res) => {
-  const { nombre, email, password } = req.body;
+  try {
+    const { nombre, email, password } = req.body;
 
-  if (!nombre || !email || !password) {
-    return res.status(400).json({ error: "Todos los campos son requeridos" });
-  }
-
-  if (!regexNombre.test(nombre)) {
-    return res
-      .status(400)
-      .json({ error: "El nombre no cumple con el formato solicitado" });
-  }
-
-  if (!regexEmail.test(email)) {
-    return res
-      .status(400)
-      .json({
-        error: "El correo electrónico no cumple con el formato solicitado",
-      });
-  }
-
-  if (!regexPassword.test(password)) {
-    return res
-      .status(400)
-      .json({ error: "La contraseña no cumple con el formato solicitado" });
-  }
-
-  const sql =
-    "SELECT id_usuario, nombre, password FROM usuario WHERE nombre = ? AND email = ?";
-  db.query(sql, [nombre.trim(), email.trim()], (err, results) => {
-    if (err) return res.status(500).json({ error: "Error del servidor" });
-
-    const user = results[0];
-
-    if (!results || results.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "Usuario no encontrado, revise el correo" });
+    if (!nombre || !email || !password) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
-    bcrypt.compare(password, user.password, function (err, result) {
-      if (err) {
+    if (!regexNombre.test(nombre)) {
+      return res
+        .status(400)
+        .json({ error: "El nombre no cumple con el formato solicitado" });
+    }
+
+    if (!regexEmail.test(email)) {
+      return res
+        .status(400)
+        .json({
+          error: "El correo electrónico no cumple con el formato solicitado",
+        });
+    }
+
+    if (!regexPassword.test(password)) {
+      return res
+        .status(400)
+        .json({ error: "La contraseña no cumple con el formato solicitado" });
+    }
+
+    const sql =
+      "SELECT id_usuario, nombre, password FROM usuario WHERE nombre = ? AND email = ?";
+    db.query(sql, [nombre.trim(), email.trim()], (err, results) => {
+      if (err) return res.status(500).json({ error: "Error del servidor" });
+
+      const user = results[0];
+
+      if (!results || results.length === 0) {
         return res
-          .status(500)
-          .json({ error: "Error al verificar la contraseña" });
+          .status(404)
+          .json({ error: "Usuario no encontrado, revise el correo" });
       }
 
-      if (!result) {
-        return res.status(401).json({ error: "Contraseña incorrecta" });
-      }
+      bcrypt.compare(password, user.password, function (err, result) {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: "Error al verificar la contraseña" });
+        }
 
-      const token = jwt.sign(
-        {
-          id: user.id_usuario,
-          nombre: user.nombre,
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: "2h" },
-      );
+        if (!result) {
+          return res.status(401).json({ error: "Contraseña incorrecta" });
+        }
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
-        maxAge: 2 * 60 * 60 * 1000,
+        const token = jwt.sign(
+          {
+            id: user.id_usuario,
+            nombre: user.nombre,
+          },
+          process.env.JWT_SECRET,
+          { expiresIn: "2h" },
+        );
+
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+          maxAge: 2 * 60 * 60 * 1000,
+        });
+
+        res.json({ id: user.id_usuario, nombre: user.nombre });
       });
-
-      res.json({ id: user.id_usuario, nombre: user.nombre });
     });
-  });
+  } catch (error) {
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
 });
+
 
 router.post("/register", (req, res) => {
   const { nombre, email, password } = req.body;

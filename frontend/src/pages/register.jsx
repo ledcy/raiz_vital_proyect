@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { sileo } from "sileo";
 
 function Register() {
@@ -9,7 +8,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
 

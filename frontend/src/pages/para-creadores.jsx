@@ -1,8 +1,28 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../routes/authContext.jsx";
+import { sileo } from "sileo";
 import { sileo } from 'sileo';
 
 function ParaCreadores(){
   const [showForm, setShowForm] = useState(false);
+
+  const navigate = useNavigate();
+
+  const { usuario } = useAuth();
+
+  const clickbutton = () => {
+    if (!usuario) {
+      navigate("/login");
+      sileo.info({
+        title: "Alerta",
+        description: "Debes iniciar sesión para registrar un evento.",
+      });
+      return;
+    }
+
+    setShowForm(true);
+  };
   
   const [nombre, setNombre] = useState('');
   const [fecha, setFecha] = useState('');
@@ -50,7 +70,7 @@ function ParaCreadores(){
             </p>
 
             <button
-              onClick={() => setShowForm(true)}
+              onClick={clickbutton}
               className="bg-[#1a2e1a] text-white px-8 py-4 rounded-full font-semibold hover:bg-[#2d4d2d] transition-all shadow-lg"
             >
               Registrar nuevo evento
@@ -75,7 +95,7 @@ function ParaCreadores(){
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-bold">Detalles del Evento</h3>
               <button
-                onClick={() => setShowForm(false)}
+                ocnClick={() => setShowForm(false)}
                 className="text-gray-400 hover:text-red-500 text-sm"
               >
                 ✕ Cancelar
