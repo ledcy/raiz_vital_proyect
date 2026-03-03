@@ -3,6 +3,7 @@ import cors from "cors";
 import usuariosRouter from "./routes/usuarios.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
+import proyectosRouter from "./routes/proyectos.js";
 
 const app = express();
 
@@ -20,6 +21,8 @@ app.use(cookieParser());
 app.use("/api/usuarios", usuariosRouter);
 //api route para verificar token
 app.use("/api/auth", authRouter);
+
+app.use("/api/proyectos", proyectosRouter);
 
 app.listen(3001, '0.0.0.0', () => {
   console.log("Backend corriendo en puerto 3001");
