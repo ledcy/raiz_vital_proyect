@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/authContext.jsx";
 import { sileo } from "sileo";
-import { sileo } from 'sileo';
 
 function ParaCreadores(){
   const [showForm, setShowForm] = useState(false);
