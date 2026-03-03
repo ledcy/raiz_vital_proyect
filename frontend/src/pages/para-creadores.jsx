@@ -1,7 +1,37 @@
 import React, { useState } from "react";
+import { sileo } from 'sileo';
 
-const ParaCreadores = () => {
+function ParaCreadores(){
   const [showForm, setShowForm] = useState(false);
+  
+  const [nombre, setNombre] = useState('');
+  const [fecha, setFecha] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [ubicacion, setUbicacion] = useState('');
+  const [categoria, setCategoria] = useState('');
+  const [subcategoria, setSubcategoria] = useState('');
+  const [objetivo, setObjetivo] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const rest = await fetch('http://localhost:3001/api/proyectos/crear-proyecto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ nombre, fecha, descripcion, ubicacion, categoria, subcategoria, objetivo })
+    });
+
+    const data = await rest.json();
+
+    if (rest.ok) {
+      sileo.success({ title: data.message});
+      setTimeout(() => {
+          location.reload();
+      }, 3000);
+    } else {
+      sileo.error({ title: data.error || 'Error al crear proyecto' });
+    }
+  };
 
   return (
     <section className="bg-white py-16 px-8 md:px-20 font-sans text-[#1a2e1a]">
@@ -52,13 +82,15 @@ const ParaCreadores = () => {
               </button>
             </div>
 
-            <form className="grid md:grid-cols-2 gap-6">
+            <form className="grid md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
               <div className="flex flex-col">
                 <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Nombre del Evento
                 </label>
                 <input
                   type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                   placeholder="Ej. Taller de Reforestación"
                   className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
                 />
@@ -70,6 +102,8 @@ const ParaCreadores = () => {
                 </label>
                 <input
                   type="date"
+                  value={fecha}
+                  onChange={(e) => setFecha(e.target.value)}
                   className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
                 />
               </div>
@@ -80,6 +114,8 @@ const ParaCreadores = () => {
                 </label>
                 <textarea
                   rows="3"
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
                   placeholder="Cuéntanos sobre el impacto de este evento..."
                   className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
                 ></textarea>
@@ -91,6 +127,8 @@ const ParaCreadores = () => {
                 </label>
                 <input
                   type="text"
+                  value={ubicacion}
+                  onChange={(e) => setUbicacion(e.target.value)}
                   placeholder="Presencial o Virtual"
                   className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
                 />
@@ -100,10 +138,13 @@ const ParaCreadores = () => {
                 <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Categoría
                 </label>
-                <select className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
-                  <option>Sostenibilidad</option>
-                  <option>Bienestar</option>
-                  <option>Educación</option>
+                <select 
+                  value={categoria}
+                  onChange={(e) => setCategoria(e.target.value)}
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
+                    <option>Sostenibilidad</option>
+                    <option>Bienestar</option>
+                    <option>Educación</option>
                 </select>
               </div>
 
@@ -111,11 +152,27 @@ const ParaCreadores = () => {
                 <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
                   Subcategoría
                 </label>
-                <select className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
-                  <option>Sostenibilidad</option>
-                  <option>Bienestar</option>
-                  <option>Educación</option>
+                <select 
+                  value={subcategoria}
+                  onChange={(e) => setSubcategoria(e.target.value)}
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a] bg-white text-gray-700">
+                    <option>Sostenibilidad</option>
+                    <option>Bienestar</option>
+                    <option>Educación</option>
                 </select>
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Objetivo
+                </label>
+                <input
+                  type="text"
+                  value={objetivo}
+                  onChange={(e) => setObjetivo(e.target.value)}
+                  placeholder="5000"
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                />
               </div>
 
               <div className="md:col-span-2 pt-4">

@@ -128,7 +128,7 @@ router.post("/register", (req, res) => {
     }
 
     const sqlInsert =
-      "INSERT INTO usuario (nombre, email, password) VALUES (?, ?, ?)";
+      "INSERT INTO usuario (nombre, email, password, tipo_usuario) VALUES (?, ?, ?, ?)";
 
     const saltRounds = 10;
 
@@ -136,7 +136,7 @@ router.post("/register", (req, res) => {
       if (err) {
         console.error("Error encriptando la contraseña:", err);
       } else {
-        db.query(sqlInsert, [nombre, email, hash], (err, result) => {
+        db.query(sqlInsert, [nombre, email, hash, "usuario"], (err, result) => {
           if (err) {
             return res
               .status(500)
