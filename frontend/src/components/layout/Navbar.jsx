@@ -127,23 +127,26 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <>
-              <Link
-                to="/login"
-                className="group relative inline-flex items-center justify-center px-4 py-2 bg-[#2d5a27] text-white text-sm font-semibold rounded-full overflow-hidden transition-all duration-300"
-              >
-                Iniciar Sesión
-              </Link>
 
-              <Link
-  to="/register"
-  className="group relative inline-flex items-center justify-center px-6 py-2.5 border-2 border-[#2d5a27] text-[#2d5a27] hover:text-white text-sm font-bold rounded-xl overflow-hidden transition-all duration-300 hover:bg-[#2d5a27] active:scale-95 shadow-sm"
->
-  Crea una cuenta
-</Link>
-              </>
-              
-            )}
+          <>
+          <div className="flex items-center gap-4">
+    <Link
+      to="/login"
+      className="inline-flex items-center justify-center px-6 py-2 bg-[#2d5a27] text-white text-sm font-semibold rounded-full hover:bg-[#24481f] transition-all duration-300 shadow-sm active:scale-95"
+    >
+      Iniciar Sesión
+    </Link>
+
+    <Link
+      to="/register"
+      className="inline-flex items-center justify-center px-6 py-2 border border-[#2d5a27] text-[#2d5a27] text-sm font-semibold rounded-full hover:bg-[#2d5a27] hover:text-white transition-all duration-300 active:scale-95"
+    >
+      Crea una cuenta
+    </Link>
+  </div>
+          </>
+  
+)}
             <button>
               <MagnifyingGlassIcon className="w-6 h-6 text-gray-500" />
             </button>
@@ -245,7 +248,6 @@ const Navbar = () => {
                 >
                   Iniciar Sesión
                 </Link>
-                
               )}
             </div>
           </div>

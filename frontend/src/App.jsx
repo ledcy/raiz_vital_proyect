@@ -31,7 +31,8 @@ function App() {
           }
         />
 
-        <Route path="/para-creadores" element={<ParaCreadores />} />
+        <Route 
+        path="/para-creadores" element={<ParaCreadores />} />
 
         <Route path="/register" element={<Register />} />
         <Route
