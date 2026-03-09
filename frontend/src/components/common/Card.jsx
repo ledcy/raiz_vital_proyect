@@ -1,8 +1,7 @@
 import { GlobeAmericasIcon, HeartIcon } from "@heroicons/react/24/outline";
-import imagenCausa from "../../assets/hero.jpg";
 
 const Card = ({ info }) => {
-  const rutaImg = `/causasImagenes/${info.nombreImagen}`;
+  const rutaImg = `/causasImagenes/${info.imagen}`;
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
       {/* Imagen con Aspect Ratio */}
@@ -10,7 +9,7 @@ const Card = ({ info }) => {
         <img
           src={rutaImg}
           className="w-full h-full object-cover"
-          alt={info.titulo}
+          alt={info.nombre}
         />
         <span className="absolute top-4 right-4 bg-verde-bosque text-white text-xs font-bold px-3 py-1 rounded-full">
           {info.categoria}
@@ -27,7 +26,7 @@ const Card = ({ info }) => {
         </div>
 
         <h3 className="text-xl font-bold text-pizarra-azul mb-3">
-          {info.titulo}
+          {info.nombre}
         </h3>
 
         {/* BARRA DE SEGUIMIENTO (Progress Bar) */}
@@ -37,7 +36,7 @@ const Card = ({ info }) => {
               {info.porcentaje}% completado
             </span>
             <span className="text-gray-400">
-              ${info.recaudacion}/ {info.meta}
+              ${info.financiamiento_actual}/ {info.objetivo}
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">

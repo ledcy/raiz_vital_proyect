@@ -1,9 +1,33 @@
-import { GlobeAmericasIcon, HeartIcon, ChartBarIcon } from '@heroicons/react/24/outline';
-import imagenCausa from '../../assets/hero.jpg';
-import  causas from '../../assets/causas';
+//import  causas from '../../assets/causas';
+import { useState, useEffect } from "react";
 import Card from './Card';
+
 const SeccionCausas = () => {
+
+    const [data, setData] = useState([]);
+
+    const getProyectos = async () => {
+        const rest = await fetch('http://localhost:3001/api/proyectos/get-proyectos', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+        });
+
+        const resData = await rest.json();
+
+        if (rest.ok) {
+            setData(resData);
+        } else {
+            sileo.error({ title: data.error || 'Error al obtener proyectos' });
+        }
+    };
+
+    useEffect(() => {
+        getProyectos();
+    }, []);
+
     return (
+        
         // CONTENEDOR PRINCIPAL DE LA SECCIÓN
         <section className="bg-arena py-16 px-4">
 
@@ -20,9 +44,9 @@ const SeccionCausas = () => {
             {/* GRID DE CARDS (El contenedor de la lista) */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {
-                    causas.map((obj, i)=> {
+                    data.map((proyecto)=> {
                         return (
-                            <Card key={obj.id} info={obj}></Card>
+                            <Card key={proyecto.id_proyecto} info={proyecto}></Card>
                         )
                     })
                 }

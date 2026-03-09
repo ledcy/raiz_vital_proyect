@@ -49,4 +49,15 @@ router.post("/crear-proyecto", verifyToken, (req, res) => {
     });
 });
 
+router.get("/get-proyectos", (req, res) => {
+    const sql = "SELECT * FROM proyecto";
+    db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Error al obtener proyectos" });
+    }
+
+    res.json(results);
+  });
+});
+
 export default router;
