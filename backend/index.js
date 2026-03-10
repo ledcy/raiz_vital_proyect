@@ -24,6 +24,8 @@ app.use("/api/auth", authRouter);
 
 app.use("/api/proyectos", proyectosRouter);
 
+app.use("/uploads", express.static("uploads"));
+
 app.listen(3001, '0.0.0.0', () => {
   console.log("Backend corriendo en puerto 3001");
 });

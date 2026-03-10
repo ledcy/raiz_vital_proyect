@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/authContext.jsx";
 import { sileo } from "sileo";
@@ -30,14 +30,26 @@ function ParaCreadores(){
   const [categoria, setCategoria] = useState('');
   const [subcategoria, setSubcategoria] = useState('');
   const [objetivo, setObjetivo] = useState('');
+  const [imagen, setImagen] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+
+    formData.append('nombre', nombre);
+    formData.append('fecha', fecha);
+    formData.append('descripcion', descripcion);
+    formData.append('ubicacion', ubicacion);
+    formData.append('categoria', categoria);
+    formData.append('subcategoria', subcategoria);
+    formData.append('objetivo', objetivo);
+    formData.append('imagen', imagen);
+
     const rest = await fetch('http://localhost:3001/api/proyectos/crear-proyecto', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ nombre, fecha, descripcion, ubicacion, categoria, subcategoria, objetivo })
+      body: formData
     });
 
     const data = await rest.json();
@@ -190,6 +202,18 @@ function ParaCreadores(){
                   value={objetivo}
                   onChange={(e) => setObjetivo(e.target.value)}
                   placeholder="5000"
+                  className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="mb-2 text-sm font-semibold uppercase tracking-wider text-gray-500">
+                  Imagen
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setImagen(e.target.files[0])}
                   className="p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#1a2e1a]"
                 />
               </div>

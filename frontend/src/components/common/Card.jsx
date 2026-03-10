@@ -1,7 +1,7 @@
 import { GlobeAmericasIcon, HeartIcon } from "@heroicons/react/24/outline";
 
 const Card = ({ info }) => {
-  const rutaImg = `/causasImagenes/${info.imagen}`;
+  const rutaImg = `http://localhost:3001/uploads/${info.portada}`;
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
       {/* Imagen con Aspect Ratio */}
