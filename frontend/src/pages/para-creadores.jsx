@@ -94,10 +94,10 @@ function ParaCreadores(){
             <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-bold">Detalles del Evento</h3>
               <button
-                ocnClick={() => setShowForm(false)}
+                onClick={() => setShowForm(false)}
                 className="text-gray-400 hover:text-red-500 text-sm"
               >
-                ✕ Cancelar
+                ✕ Cerrar
               </button>
             </div>
 

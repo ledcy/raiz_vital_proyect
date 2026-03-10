@@ -5,6 +5,9 @@ import Card from './Card';
 const SeccionCausas = () => {
 
     const [data, setData] = useState([]);
+    const [mostrarCards, setMostrarCards] = useState(false);
+
+    const causaMostar = mostrarCards ? data : data.slice(-3);
 
     const getProyectos = async () => {
         const rest = await fetch('http://localhost:3001/api/proyectos/get-proyectos', {
@@ -44,13 +47,25 @@ const SeccionCausas = () => {
             {/* GRID DE CARDS (El contenedor de la lista) */}
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {
-                    data.map((proyecto)=> {
+                    causaMostar.map((proyecto)=> {
                         return (
                             <Card key={proyecto.id_proyecto} info={proyecto}></Card>
                         )
                     })
                 }
             </div>
+            {
+                data.length > 3 && (
+                    <div className="flex justify-center mt-10">
+                        <button
+                onClick={() => setMostrarCards(!mostrarCards)}
+                className="px-6 py-3 bg-green-700 text-white rounded-lg hover:bg-green-800 transition"
+            >
+                {mostrarCards ? "Ver menos" : "Ver más"}
+            </button>
+                    </div>
+                )
+            }
         </section>
     );
 };
