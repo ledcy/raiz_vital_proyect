@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { sileo } from "sileo";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
@@ -19,7 +20,7 @@ const Profile = () => {
         const data = await res.json();
         setUserData(data);
       } catch (error) {
-        console.error('Error al obtener perfil:', error);
+        sileo.error({title: 'Error al obtener perfil:'});
       } finally {
         setLoading(false);
       }
