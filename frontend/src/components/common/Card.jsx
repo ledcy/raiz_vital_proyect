@@ -40,7 +40,7 @@ const Card = ({ info }) => {
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-verde-bosque h-2 rounded-full w-[65%]"></div>
+            <div className={`h-2 rounded-full ${info.porcentaje > 100 ? "bg-amber-400" : "bg-verde-bosque"}`} style={{width: `${info.porcentaje > 100 ? "100" : info.porcentaje}%`}}></div>
           </div>
         </div>
 

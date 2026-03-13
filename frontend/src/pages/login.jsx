@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/authContext.jsx";
 
 function Login() {
-  const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setUsuario } = useAuth();
@@ -17,7 +16,7 @@ function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ nombre, email, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await rest.json();
@@ -62,19 +61,6 @@ function Login() {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-1">
-            <label className="block text-[13px] font-semibold text-gray-700">
-              Nombre de usuario
-            </label>
-            <input
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
-              placeholder="Introduce tu nombre"
-              required
-            />
-          </div>
 
           <div className="space-y-1">
             <label className="block text-[13px] font-semibold text-gray-700">

@@ -26,7 +26,7 @@ const Navbar = () => {
         );
       }
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      sileo.error({title: "Error al cerrar sesión:"});
     }
   }
 
