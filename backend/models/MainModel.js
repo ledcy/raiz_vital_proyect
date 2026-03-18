@@ -4,7 +4,6 @@ const model = {
     select: async(tabla, columnas, condicion) => {
         const sqlSelect = `SELECT ${columnas.join(", ")} FROM ${tabla}`;
 
-        console.log(sqlSelect)
         const sqlWhere = condicion ? `WHERE ${condicion.condicion} = ?` : ""
         const sql = `${sqlSelect} ${sqlWhere}`;
 
@@ -49,6 +48,40 @@ const model = {
         return new Promise((resolve, reject) => {
             db.query(sql, valores, (err, result) => {
                 if (err) {
+                    return reject(err);
+                }
+
+                resolve(result);
+            });
+        });
+    },
+
+    delete: async(tabla, data) => {
+        const sql = `DELETE FROM ${tabla} WHERE ${data.campo} = ?`;
+
+        return new Promise((resolve, reject) => {
+            db.query(sql, data.valor), (err, result) => {
+                if(err){
+                    return reject(err);
+                }
+
+                resolve(result);
+            }
+        });
+    },
+
+    update: async(tabla, data, condicion) => {
+        const campos = data.map(d => d.campo_nombre);
+        const valores = data.map(d => d.campo_valor);
+
+        const set = campos.map(c => `${c} = ?`).join(", ");
+        const values = [valores, condicion.valor];
+
+        const sql = `UPDATE ${tabla} SET ${set} WHERE ${condicion.condicion} = ?`;
+
+        return new Promise((resolve, reject) => {
+            db.query(sql, values, (err, result) => {
+                if(err){
                     return reject(err);
                 }
 

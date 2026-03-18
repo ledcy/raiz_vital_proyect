@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { sileo } from "sileo";
+import Card from "../components/common/Card";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
+  const [projectData, setProjectData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +31,45 @@ const Profile = () => {
 
     obtenerPerfil();
   }, []);
+
+  const getProyectos = async () => {
+        const rest = await fetch(`http://localhost:3001/api/proyectos/get-proyectos?userId=${userData.id_usuario}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+        });
+
+        const resData = await rest.json();
+
+        if (rest.ok) {
+            setProjectData(resData);
+        } else {
+            sileo.error({ title: data.error || 'Error al obtener proyectos' });
+        }
+    };
+
+    useEffect(() => {
+        if(userData && userData.id_usuario){
+            getProyectos();
+        }
+    }, [userData]);
+
+    const deleteProject = async(id_proyecto, portada) => {
+        const rest = await fetch(`http://localhost:3001/api/proyectos/delete-project?field=id_proyecto&value=${id_proyecto}&portada=${portada}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        const data = await rest.json();
+
+        if(rest.ok){
+            sileo.success({title: data.message});
+            setProjectData(prev => prev.filter(p => p.id_proyecto !== id_proyecto));
+        }else {
+            sileo.error({ title: data.error || 'Error al eliminar proyecto' });
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#FDFDFB] py-12 px-4">
@@ -93,6 +135,18 @@ const Profile = () => {
                     </label>
                 </div>
 
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    {
+                        projectData.map((proyecto)=> {
+                            return (
+                                <Card key={proyecto.id_proyecto} info={proyecto} acciones={[
+                                    { texto: "Editar", icon: PencilIcon, onClick: () => console.log("Editar") },
+                                    { texto: "Eliminar", icon: TrashIcon, onClick: () => deleteProject(proyecto.id_proyecto, proyecto.portada) }
+                                ]}></Card>
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
     );

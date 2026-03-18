@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.post("/crear-proyecto", upload.single('imagen'), verifyToken, proyecto.create);
 router.get("/get-proyectos", proyecto.retrieve);
+router.delete("/delete-project", proyecto.delete);
 
 
 export default router;

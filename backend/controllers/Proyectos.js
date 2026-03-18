@@ -14,6 +14,8 @@ const proyecto = {
                 throw new Error("La imagen es requerida");
             }
 
+            console.log(req.file);
+
             const nombreImagen = req.file.filename;
 
             if (!nombre || !fecha || !descripcion || !ubicacion || !categoria || !subcategoria || !objetivo) {
@@ -105,6 +107,17 @@ const proyecto = {
     },
 
     retrieve: async(req, res) => {
+        const {userId} = req.query;
+
+        var condicion = null;
+
+        if(userId){
+            condicion = {
+                condicion: "id_usuario",
+                valor: userId
+            }
+        }
+
         try{
             const columnas = [
                 "p.id_proyecto",
@@ -125,11 +138,31 @@ const proyecto = {
                 }
             ];
 
-            const proyectos = await model.select_join("proyecto p", columnas, joins, null);
+            const proyectos = await model.select_join("proyecto p", columnas, joins, condicion);
 
             res.json(proyectos);
         } catch(error){
             res.status(500).json({error: "Error al obtener proyectos"});
+        }
+    },
+
+    delete: async(req, res) => {
+        try{
+            const {field, value, portada} = req.query;
+            const file_path = "uploads/"+ portada;
+
+            const data = {
+                campo: field,
+                valor: value
+            };
+
+            model.delete("proyecto", data);
+
+            fs.unlink(file_path, () => {});
+
+            return res.status(200).json({message: "Eliminado correctamente"});
+        } catch(error){
+            res.status(500).json({error: "Error al eliminar proyecto"});
         }
     },
 

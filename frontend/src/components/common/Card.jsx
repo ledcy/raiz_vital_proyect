@@ -1,6 +1,6 @@
-import { GlobeAmericasIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
 
-const Card = ({ info }) => {
+const Card = ({ info, acciones }) => {
   const rutaImg = `http://localhost:3001/uploads/${info.portada}`;
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
@@ -45,14 +45,17 @@ const Card = ({ info }) => {
         </div>
 
         {/* BOTONES DE ACCIÓN */}
-        <div className="grid grid-cols-2 gap-3">
-          <button className="flex items-center justify-center gap-2 bg-verde-bosque text-white py-2.5 rounded-lg font-semibold hover:bg-opacity-90 transition-all">
-            <HeartIcon className="w-5 h-5" />
-            Donar
-          </button>
-          <button className="flex items-center justify-center gap-2 border-2 border-verde-bosque text-verde-bosque py-2.5 rounded-lg font-semibold hover:bg-verde-bosque hover:text-white transition-all">
-            Ayudar
-          </button>
+        <div className="grid grid-cols-1 gap-4">
+          {acciones.map((accion, i) => (
+            <button
+              key={i}
+              className="flex items-center justify-center gap-2 border-2 border-verde-bosque text-verde-bosque py-2.5 rounded-lg font-semibold hover:bg-verde-bosque hover:text-white transition-all"
+              onClick={accion.onClick}
+            >
+              {accion.icon && <accion.icon className="w-5 h-5" />}
+              {accion.texto}
+            </button>
+          ))}
         </div>
       </div>
     </div>
