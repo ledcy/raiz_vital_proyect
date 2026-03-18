@@ -1,6 +1,8 @@
 //import  causas from '../../assets/causas';
 import { useState, useEffect } from "react";
 import Card from './Card';
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { sileo } from "sileo";
 
 const SeccionCausas = () => {
 
@@ -49,7 +51,9 @@ const SeccionCausas = () => {
                 {
                     causaMostar.map((proyecto)=> {
                         return (
-                            <Card key={proyecto.id_proyecto} info={proyecto}></Card>
+                            <Card key={proyecto.id_proyecto} info={proyecto} acciones={[
+                                { texto: "Patrocina este proyecto", icon: HeartIcon, onClick: () => console.log("Patrocinar") }
+                            ]}></Card>
                         )
                     })
                 }
