@@ -9,6 +9,7 @@ import Register from "./pages/register.jsx";
 import Profile from "./pages/profile.jsx";
 import ParaCreadores from "./pages/para-creadores.jsx";
 import Sileo from "./assets/sileo.jsx";
+import RestorePassword from "./pages/recuperar-contraseña.jsx";
 
 import PublicRoute from "../routes/PublicRoute.jsx";
 import PrivateRoute from "../routes/privateRoute.jsx";
@@ -43,6 +44,8 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        <Route path="/recuperar-contraseña" element={<RestorePassword />}/>
 
         <Route path="*" element={<NotFound />} />
       </Routes>

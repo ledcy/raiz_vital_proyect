@@ -118,7 +118,7 @@ const usuario = {
                 valor: email
             };
 
-            const verify_user = await model.select_condition("usuario", columnas, condicion);
+            const verify_user = await model.select("usuario", columnas, condicion);
 
             if (verify_user.length > 0) {
             return res
@@ -158,6 +158,7 @@ const usuario = {
             });
             
         } catch (error) {
+            console.log(error);
             return res.status(500).json({error: "Error al registrar usuario"});
         }
     },
@@ -199,6 +200,85 @@ const usuario = {
             
         } catch(error){
             return res.status(500).json({ error: "Error al obtener el perfil" });
+        }
+    },
+
+    create_password_reset: async(req, res) => {
+        try {
+            const {email, resetToken, expiresAt} = req;
+
+            const data = [
+                {
+                    campo_nombre: "email",
+                    campo_valor: email
+                },
+                {
+                    campo_nombre: "token",
+                    campo_valor: resetToken
+                },
+                {
+                    campo_nombre: "expires_at",
+                    campo_valor: expiresAt
+                }
+            ];
+
+            model.insert("password_resets", data);
+
+            return res.status(200).json({message: "Reset password creado"});
+        } catch (error) {
+            return res.status(500).json({error: "Error del servidor"});
+        }
+    },
+
+    update_password: async(req, res) => {
+        try {
+            const {resetToken, newPassword, confirmPassword} = req.body;
+            const columnas = ["email", "expires_at"];
+            const condicionReset = {
+                condicion: "token",
+                valor: resetToken
+            };
+
+            const dataToken = await model.select("password_resets", columnas, condicionReset);
+
+            if(dataToken.length == 0 || new Date(dataToken[0].expires_at) < new Date){
+                return res.status(400).json({error: "Token inválido o expirado"})
+            }
+
+            const email = dataToken[0].email;
+
+            if (!regexPassword.test(newPassword) || !regexPassword.test(confirmPassword)) {
+                return res
+                .status(400)
+                .json({ error: "La contraseña no cumple con el formato solicitado" });
+            }
+
+            if(newPassword !== confirmPassword){
+                return res.status(400).json({error: "Las contraseñas no coinciden"});
+            }
+
+            const saltRounds = 10;
+
+            const hash = await bcrypt.hash(newPassword, saltRounds);
+
+            const data = [
+                {
+                    campo_nombre: "password",
+                    campo_valor: hash
+                }
+            ];
+
+            const condicion = {
+                condicion: "email",
+                valor: email
+            };
+
+            model.update("usuario", data, condicion);
+
+            return res.status(200).json({message: "Contraseña reestablecida correctamente"});
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({error: "Error al actualizar contraseña"});
         }
     },
 };

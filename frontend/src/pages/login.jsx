@@ -2,6 +2,7 @@ import { useState } from "react";
 import { sileo } from "sileo";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../routes/authContext.jsx";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -93,12 +94,12 @@ function Login() {
           </div>
 
           <div className="py-1">
-            <a
-              href="#"
+            <Link
+              to="/recuperar-contraseña"
               className="text-[14px] font-semibold text-[#2d5a27] hover:underline"
             >
               ¿Has olvidado la contraseña?
-            </a>
+            </Link>
           </div>
 
           <div className="pt-2">
