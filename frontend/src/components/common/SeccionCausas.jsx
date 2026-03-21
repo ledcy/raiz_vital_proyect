@@ -1,15 +1,18 @@
 //import  causas from '../../assets/causas';
 import { useState, useEffect } from "react";
 import Card from './Card';
-import { HeartIcon } from "@heroicons/react/24/outline";
+import CardSimple from './SimpleCard';
+import { HeartIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { sileo } from "sileo";
 
 const SeccionCausas = () => {
 
-    const [data, setData] = useState([]);
+    const [dataProjects, setProjectsData] = useState([]);
+    const [dataCampaigns, setCampaignsData] = useState([]);
     const [mostrarCards, setMostrarCards] = useState(false);
+    const [tipoVista, setTipoVista] = useState("proyectos"); 
 
-    const causaMostar = mostrarCards ? data : data.slice(-3);
+    const projectsMostar = mostrarCards ? dataProjects : dataProjects.slice(-3);
 
     const getProyectos = async () => {
         const rest = await fetch('http://localhost:3001/api/proyectos/get-proyectos', {
@@ -21,14 +24,48 @@ const SeccionCausas = () => {
         const resData = await rest.json();
 
         if (rest.ok) {
-            setData(resData);
+            setProjectsData(resData);
         } else {
             sileo.error({ title: data.error || 'Error al obtener proyectos' });
         }
     };
 
+    const getCampaigns = async () => {
+        const rest = await fetch('http://localhost:3001/api/campaign/get-campaign', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+        });
+
+        const resData = await rest.json();
+
+        if (rest.ok) {
+            setCampaignsData(resData);
+        } else {
+            sileo.error({ title: resData.error || 'Error al obtener campañas' });
+        }
+    };
+
+    const inscripcionCampaña = async (id_campaña) => {
+        const rest = await fetch('http://localhost:3001/api/campaign/create-campaign-registration', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include',
+            body: JSON.stringify({id_campaña})
+        });
+
+        const data = await rest.json();
+
+        if(rest.ok){
+            sileo.success({title: "Registro exitoso"})
+        }else{
+            sileo.error({title: data.error || "Error al registrarse"});
+        }
+    };
+
     useEffect(() => {
         getProyectos();
+        getCampaigns();
     }, []);
 
     return (
@@ -46,20 +83,57 @@ const SeccionCausas = () => {
                 </p>
             </div>
 
-            {/* GRID DE CARDS (El contenedor de la lista) */}
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {
-                    causaMostar.map((proyecto)=> {
-                        return (
-                            <Card key={proyecto.id_proyecto} info={proyecto} acciones={[
-                                { texto: "Patrocina este proyecto", icon: HeartIcon, onClick: () => console.log("Patrocinar") }
-                            ]}></Card>
-                        )
-                    })
-                }
+            <div className="flex justify-center gap-4 mb-8">
+                <button
+                onClick={() => setTipoVista("proyectos")}
+                className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                    tipoVista === "proyectos"
+                    ? "bg-[#1D351E] text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+                >
+                Proyectos
+                </button>
+                <button
+                onClick={() => setTipoVista("campañas")}
+                className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                    tipoVista === "campañas"
+                    ? "bg-[#1D351E] text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+                >
+                Campañas
+                </button>
             </div>
+
+            {/* GRID DE CARDS (El contenedor de la lista) */}
+            {tipoVista === "proyectos" ? (
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {dataProjects.map((proyecto) => (
+                    <Card
+                    key={proyecto.id_proyecto}
+                    info={proyecto}
+                    acciones={[
+                        { texto: "Patrocina este proyecto", icon: HeartIcon, onClick: () => console.log("Patrocinar") }
+                    ]}
+                    />
+                ))}
+                </div>
+            ) : (
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {dataCampaigns.map((campaña) => (
+                    <CardSimple 
+                    key={campaña.id}
+                    info={campaña} 
+                    acciones={[
+                        { texto: "Participa como voluntario", icon: PencilIcon, onClick: () => inscripcionCampaña(campaña.id_campaña) }
+                    ]}
+                    />
+                ))} 
+                </div>
+            )}
             {
-                data.length > 3 && (
+                dataProjects.length > 3 && (
                     <div className="flex justify-center mt-10">
                         <button
                 onClick={() => setMostrarCards(!mostrarCards)}

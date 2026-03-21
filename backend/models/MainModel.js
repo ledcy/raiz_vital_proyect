@@ -4,11 +4,14 @@ const model = {
     select: async(tabla, columnas, condicion) => {
         const sqlSelect = `SELECT ${columnas.join(", ")} FROM ${tabla}`;
 
-        const sqlWhere = condicion ? `WHERE ${condicion.condicion} = ?` : ""
+        const sqlWhere = condicion != null ? `WHERE ${condicion.map(c => `${c.condicion} = ?`).join(" AND ")}` : ""
+        const valores = condicion != null ? condicion.map(c => c.valor) : [];
         const sql = `${sqlSelect} ${sqlWhere}`;
 
+        //console.log(sql);
+
         return new Promise((resolve, reject) => {
-            db.query(sql, condicion ? condicion.valor : [], (err, result) => {
+            db.query(sql, condicion ? valores : [], (err, result) => {
                 if (err) {
                     return reject(err)
                 }

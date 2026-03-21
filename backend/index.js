@@ -4,6 +4,7 @@ import usuariosRouter from "./routes/usuarios.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
 import proyectosRouter from "./routes/proyectos.js";
+import campañasRouter from "./routes/campañas.js";
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.use("/api/usuarios", usuariosRouter);
 app.use("/api/auth", authRouter);
 
 app.use("/api/proyectos", proyectosRouter);
+
+app.use("/api/campaign", campañasRouter);
 
 app.use("/uploads", express.static("uploads"));
 

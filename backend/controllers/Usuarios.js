@@ -2,12 +2,15 @@ import jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import model from "../models/MainModel.js";
+import { emailSender } from "../middleware/emailSender.js";
+import crypto from "crypto";
 
 dotenv.config();
 
 const regexNombre = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$/;
 const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const regexPassword = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+const regexBase = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9#&,.;" ]+$/;
 
 const usuario = {
     login: async(req, res) => {
@@ -32,11 +35,13 @@ const usuario = {
                     .json({ error: "La contraseña no cumple con el formato solicitado" });
             }
 
-            const columnas = ["id_usuario", "nombre", "password"];
-            const condicion = {
-                condicion: "email",
-                valor: email
-            };
+            const columnas = ["id_usuario", "nombre", "password", "tipo_usuario"];
+            const condicion = [
+                {
+                    condicion: "email",
+                    valor: email
+                }
+            ];
 
             const user = await model.select("usuario", columnas, condicion);
 
@@ -63,6 +68,7 @@ const usuario = {
                     id: user[0].id_usuario,
                     nombre: user[0].nombre,
                     email: user[0].email,
+                    tipo: user[0].tipo_usuario
                 },
                 process.env.JWT_SECRET,
                 { expiresIn: "2h" },
@@ -75,17 +81,18 @@ const usuario = {
                 maxAge: 2 * 60 * 60 * 1000,
                 });
 
-                res.json({ id: user[0].id_usuario, nombre: user[0].nombre });
+                res.json({ id: user[0].id_usuario, nombre: user[0].nombre, tipo: user[0].tipo_usuario });
             });
             
         } catch (error) {
+            console.log(error);
             res.status(500).json({ error: "Error al iniciar sesión" });
         }
     },
 
     create: async(req, res) => {
         try {
-            const { nombre, email, password } = req.body;
+            const { nombre, email, password, direccion, descripcion, tipoUsuario } = req.body;
 
             if (!nombre || !email || !password) {
                 return res.status(400).json({ error: "Todos los campos son requeridos" });
@@ -111,12 +118,32 @@ const usuario = {
                 .json({ error: "La contraseña no cumple con el formato solicitado" });
             }
 
+            if(tipoUsuario == "institucion"){
+                if (!regexBase.test(direccion)) {
+                    return res
+                    .status(400)
+                    .json({ error: "La direccion no cumple con el formato solicitado" });
+                }
+
+                if (!regexBase.test(descripcion)) {
+                    return res
+                    .status(400)
+                    .json({ error: "La descripcion no cumple con el formato solicitado" });
+                }
+
+                if (!nombre || !email || !password || !direccion || !descripcion) {
+                    return res.status(400).json({ error: "Todos los campos son requeridos" });
+                }
+            }
+
             //VERIFICAR EXISTENCIA DE REGISTRO
             const columnas = ["*"];
-            const condicion = {
-                condicion: "email",
-                valor: email
-            };
+            const condicion = [
+                {
+                    condicion: "email",
+                    valor: email
+                }
+            ]
 
             const verify_user = await model.select("usuario", columnas, condicion);
 
@@ -140,12 +167,20 @@ const usuario = {
                     campo_valor: email
                 },
                 {
+                    campo_nombre: "ubicacion",
+                    campo_valor: direccion
+                },
+                {
+                    campo_nombre: "descripcion",
+                    campo_valor: descripcion
+                },
+                {
                     campo_nombre: "password",
                     campo_valor: hash
                 },
                 {
                     campo_nombre: "tipo_usuario",
-                    campo_valor: "usuario"
+                    campo_valor: tipoUsuario
                 }
             ];
 
@@ -184,11 +219,13 @@ const usuario = {
     retrieve_profile: async(req, res) => {
         try{
             const userId = req.user.id;
-            const columnas = ["id_usuario", "nombre", "email"];
-            const condicion = {
-                condicion: "id_usuario",
-                valor: userId
-            };
+            const columnas = ["id_usuario", "nombre", "email", "descripcion", "ubicacion", "tipo_usuario"];
+            const condicion = [
+                {
+                    condicion: "id_usuario",
+                    valor: userId
+                }
+            ];
 
             const user = await model.select("usuario", columnas, condicion);
             
@@ -205,7 +242,27 @@ const usuario = {
 
     create_password_reset: async(req, res) => {
         try {
-            const {email, resetToken, expiresAt} = req;
+            const {email} = req.body;
+
+            const columnas = [
+                "email"
+            ];
+
+            const condicion = [
+                {
+                    condicion: "email",
+                    valor: email
+                }
+            ];
+
+            const user = await model.select("usuario", columnas, condicion);
+
+            if(!user || user.length === 0){
+                return res.status(404).json({error: "El correo electrónico no está registrado"});
+            }
+
+            const resetToken = crypto.randomBytes(32).toString("hex");
+            const expiresAt = new Date(Date.now() + 3600000); // 1 hora
 
             const data = [
                 {
@@ -224,8 +281,11 @@ const usuario = {
 
             model.insert("password_resets", data);
 
-            return res.status(200).json({message: "Reset password creado"});
+            emailSender(email, resetToken);
+
+            return res.status(200).json({message: "Peticion enviada"})
         } catch (error) {
+            console.log(error);
             return res.status(500).json({error: "Error del servidor"});
         }
     },
@@ -268,12 +328,21 @@ const usuario = {
                 }
             ];
 
-            const condicion = {
-                condicion: "email",
-                valor: email
-            };
+            const condicion = [
+                {
+                    condicion: "email",
+                    valor: email
+                }
+            ];
 
             model.update("usuario", data, condicion);
+
+            const dataDelete = {
+                campo: "token",
+                valor: resetToken
+            };
+
+            model.delete("password_resets", dataDelete);
 
             return res.status(200).json({message: "Contraseña reestablecida correctamente"});
         } catch (error) {

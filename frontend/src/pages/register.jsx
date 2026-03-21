@@ -3,10 +3,13 @@ import { useState } from "react";
 import { sileo } from "sileo";
 
 function Register() {
+  const [tipoUsuario, setTipoUsuario] = useState("usuario");
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [direccion, setDireccion] = useState("");
+  const [descripcion, setDescripcion] = useState("");
 
 
   const handleSubmit = async (e) => {
@@ -22,7 +25,7 @@ function Register() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nombre, email, password }),
+        body: JSON.stringify({ nombre, email, password, direccion, descripcion, tipoUsuario }),
       });
 
       const data = await res.json();
@@ -84,73 +87,190 @@ function Register() {
           </p>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-1">
-            <label className="block text-[13px] font-semibold text-gray-700">
-              Nombre completo
-            </label>
-            <input
-              type="text"
-              name="nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
-              placeholder="Tu nombre y apellido"
-              required
-            />
-          </div>
+        {tipoUsuario == "usuario" ? ( 
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Nombre completo
+              </label>
+              <input
+                type="text"
+                name="nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="Tu nombre y apellido"
+                required
+              />
+            </div>
 
-          <div className="space-y-1">
-            <label className="block text-[13px] font-semibold text-gray-700">
-              Dirección de correo electrónico
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
-              placeholder="nombre@ejemplo.com"
-              required
-            />
-          </div>
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Dirección de correo electrónico
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="nombre@ejemplo.com"
+                required
+              />
+            </div>
 
-          <div className="space-y-1">
-            <label className="block text-[13px] font-semibold text-gray-700">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
-              placeholder="Crea una contraseña"
-              required
-            />
-          </div>
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="Crea una contraseña"
+                required
+              />
+            </div>
 
-          <p className="text-[12px] text-gray-500 leading-relaxed">
-            Al hacer clic en "Continuar", aceptas nuestras
-            <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
-              Condiciones de uso
-            </span>
-            y confirmas que has leído nuestra
-            <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
-              Política de privacidad
-            </span>
-            .
-          </p>
+            <p className="text-[12px] text-gray-500 leading-relaxed">
+              Al hacer clic en "Continuar", aceptas nuestras
+              <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
+                Condiciones de uso
+              </span>
+              y confirmas que has leído nuestra
+              <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
+                Política de privacidad
+              </span>
+              .
+            </p>
 
-          <div className="pt-2">
+            <div className="pt-2">
+              <button
+                disabled={loading}
+                type="submit"
+                className="w-full bg-[#2d5a27] hover:bg-[#23461f] text-white text-[16px] font-bold py-3 px-6 rounded-full shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Registrando..." : "Continuar"}
+              </button>
+            </div>
+          </form>
+        ) : (
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Nombre de la institucion
+              </label>
+              <input
+                type="text"
+                name="nombre"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="Tu nombre y apellido"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Dirección de correo electrónico
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="nombre@ejemplo.com"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Ubicación de la institución
+              </label>
+              <input
+                type="text"
+                value={direccion}
+                onChange={(e) => setDireccion(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="Calle 5 de mayo #10, Col.Obrera, Monterrey, N.L."
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Descripcion de las actividades
+              </label>
+              <textarea
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400 resize-none"
+                placeholder="Describe lo que hace la institución"
+                rows={5} 
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-[13px] font-semibold text-gray-700">
+                Contraseña
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-[4px] text-[15px] focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
+                placeholder="Crea una contraseña"
+                required
+              />
+            </div>
+
+            <p className="text-[12px] text-gray-500 leading-relaxed">
+              Al hacer clic en "Continuar", aceptas nuestras
+              <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
+                Condiciones de uso
+              </span>
+              y confirmas que has leído nuestra
+              <span className="text-[#2d5a27] cursor-pointer hover:underline mx-1">
+                Política de privacidad
+              </span>
+              .
+            </p>
+
+            <div className="pt-2">
+              <button
+                disabled={loading}
+                type="submit"
+                className="w-full bg-[#2d5a27] hover:bg-[#23461f] text-white text-[16px] font-bold py-3 px-6 rounded-full shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Registrando..." : "Continuar"}
+              </button>
+            </div>
+          </form>
+        )}
+
+        <div className="flex justify-center mb-6 w-full mt-6 gap-2">
             <button
-              disabled={loading}
-              type="submit"
-              className="w-full bg-[#2d5a27] hover:bg-[#23461f] text-white text-[16px] font-bold py-3 px-6 rounded-full shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setTipoUsuario("usuario")}
+              className={`px-7 py-2 rounded-full font-semibold ${
+                tipoUsuario === "usuario" ? "bg-[#2d5a27] text-white" : "bg-gray-200 text-gray-700"
+              }`}
             >
-              {loading ? "Registrando..." : "Continuar"}
+              Usuario
+            </button>
+            <button
+              onClick={() => setTipoUsuario("institucion")}
+              className={`px-7 py-2 rounded-full font-semibold ${
+                tipoUsuario === "institucion" ? "bg-[#2d5a27] text-white" : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              Institución
             </button>
           </div>
-        </form>
 
         <div className="mt-10 pt-6 border-t border-gray-100 text-center">
           <p className="text-[12px] text-gray-400 font-medium tracking-wide uppercase">
