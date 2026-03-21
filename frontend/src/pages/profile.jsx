@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { sileo } from "sileo";
 import Card from "../components/common/Card";
+import CardSimple from "../components/common/SimpleCard";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [projectData, setProjectData] = useState([]);
+  const [campaignData, setCampaignData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tipoVista, setTipoVista] = useState("proyectos"); 
 
   useEffect(() => {
     const obtenerPerfil = async () => {
@@ -32,7 +35,7 @@ const Profile = () => {
     obtenerPerfil();
   }, []);
 
-  const getProyectos = async () => {
+    const getProyectos = async () => {
         const rest = await fetch(`http://localhost:3001/api/proyectos/get-proyectos?userId=${userData.id_usuario}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -44,13 +47,30 @@ const Profile = () => {
         if (rest.ok) {
             setProjectData(resData);
         } else {
-            sileo.error({ title: data.error || 'Error al obtener proyectos' });
+            sileo.error({ title: resData.error || 'Error al obtener proyectos' });
+        }
+    };
+
+    const getCampañas = async() => {
+        const rest = await fetch(`http://localhost:3001/api/campaign/get-campaign?userId=${userData.id_usuario}&userType=${userData.tipo_usuario}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include'
+        });
+
+        const resData = await rest.json();
+
+        if (rest.ok) {
+            setCampaignData(resData);
+        } else {
+            sileo.error({ title: resData.error || 'Error al obtener campañas' });
         }
     };
 
     useEffect(() => {
         if(userData && userData.id_usuario){
             getProyectos();
+            getCampañas();
         }
     }, [userData]);
 
@@ -68,6 +88,40 @@ const Profile = () => {
             setProjectData(prev => prev.filter(p => p.id_proyecto !== id_proyecto));
         }else {
             sileo.error({ title: data.error || 'Error al eliminar proyecto' });
+        }
+    };
+
+    const deleteCampaign = async(id_campaña) => {
+        const rest = await fetch(`http://localhost:3001/api/campaign/delete-campaign?field=id_campaña&value=${id_campaña}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+        });
+
+        const data = await rest.json();
+
+        if(rest.ok){
+            sileo.success({title: data.message});
+            setCampaignData(prev => prev.filter(p => p.id_campaña !== id_campaña));
+        }else {
+            sileo.error({ title: data.error || 'Error al eliminar campaña' });
+        }
+    };
+
+    const cancelRegistration = async(id_inscripcion) => {
+        const rest = await fetch(`http://localhost:3001/api/campaign/delete-registration?idInscripcion=${id_inscripcion}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include'
+        });
+
+        const data = await rest.json();
+
+        if(rest.ok){
+            sileo.success({title: data.message});
+            setCampaignData(prev => prev.filter(p => p.id_inscripcion !== id_inscripcion));
+        }else{
+            sileo.error({error: data.error || "Error al cancelar inscripcion"});
         }
     };
 
@@ -117,7 +171,7 @@ const Profile = () => {
                         <div className="pt-4 border-t border-stone-50">
                             <label className="block text-xs font-bold uppercase tracking-widest text-[#606C38] mb-2">Biografía</label>
                             <p className="text-gray-600 leading-relaxed italic text-sm bg-stone-50 p-6 rounded-2xl">
-                                "Apasionado por la naturaleza y el bienestar integral. Me uní a Raíces de Vida para apoyar causas de reforestación."
+                                {userData?.descripcion}
                             </p>
                         </div>
                     </div>
@@ -135,18 +189,74 @@ const Profile = () => {
                     </label>
                 </div>
 
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                    {
-                        projectData.map((proyecto)=> {
-                            return (
-                                <Card key={proyecto.id_proyecto} info={proyecto} acciones={[
-                                    { texto: "Editar", icon: PencilIcon, onClick: () => console.log("Editar") },
-                                    { texto: "Eliminar", icon: TrashIcon, onClick: () => deleteProject(proyecto.id_proyecto, proyecto.portada) }
-                                ]}></Card>
-                            )
-                        })
-                    }
+                <div className="flex justify-center gap-4 mb-8">
+                    <button
+                    onClick={() => setTipoVista("proyectos")}
+                    className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                        tipoVista === "proyectos"
+                        ? "bg-[#1D351E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    >
+                    Proyectos
+                    </button>
+                    <button
+                    onClick={() => setTipoVista("campañas")}
+                    className={`px-6 py-2 rounded-full font-semibold transition-colors ${
+                        tipoVista === "campañas"
+                        ? "bg-[#1D351E] text-white"
+                        : "bg-gray-200 text-gray-700"
+                    }`}
+                    >
+                    Campañas
+                    </button>
                 </div>
+
+                {tipoVista === "proyectos" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    {projectData.map((proyecto) => (
+                        <Card
+                        key={proyecto.id_proyecto}
+                        info={proyecto}
+                        acciones={[
+                            { texto: "Editar", icon: PencilIcon, onClick: () => console.log("Editar") },
+                            { texto: "Eliminar", icon: TrashIcon, onClick: () => deleteProject(proyecto.id_proyecto, proyecto.portada) }
+                        ]}
+                        />
+                    ))}
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                    {campaignData.map((campaña) => (
+                        <CardSimple 
+                            key={campaña.id} 
+                            info={campaña} 
+                            acciones={
+                                userData.tipo_usuario === "usuario"
+                                ? [
+                                    { 
+                                        texto: "Cancelar inscripcion", 
+                                        icon: PencilIcon, 
+                                        onClick: () => cancelRegistration(campaña.id_inscripcion) 
+                                    }
+                                    ]
+                                : [
+                                    { 
+                                        texto: "Editar", 
+                                        icon: PencilIcon, 
+                                        onClick: () => console.log("Editar") 
+                                    },
+                                    { 
+                                        texto: "Eliminar", 
+                                        icon: TrashIcon, 
+                                        onClick: () => deleteCampaign(campaña.id_campaña) 
+                                    }
+                                    ]
+                            }
+                        />
+                    ))} 
+                    </div>
+                )}
             </div>
         </div>
     );

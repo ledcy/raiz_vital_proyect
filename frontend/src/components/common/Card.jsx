@@ -3,7 +3,7 @@ import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
 const Card = ({ info, acciones }) => {
   const rutaImg = `http://localhost:3001/uploads/${info.portada}`;
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100 flex flex-col">
       {/* Imagen con Aspect Ratio */}
       <div className="relative h-52">
         <img
@@ -17,7 +17,7 @@ const Card = ({ info, acciones }) => {
       </div>
 
       {/* Contenido de la Card */}
-      <div className="p-6">
+      <div className="p-6 flex flex-col flex-grow">
         <div className="flex items-center gap-2 mb-3">
           <GlobeAmericasIcon className="w-5 h-5 text-verde-bosque" />
           <span className="text-sm text-gray-500 font-medium">

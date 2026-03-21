@@ -1,8 +1,7 @@
 import fs from "node:fs";
-import { db } from "../db.js";
 import model from "../models/MainModel.js";
 
-const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ#¡!".,;$%& ]+$/; 
+const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ#¡!".,;$%&0-9 ]+$/; 
 
 const proyecto = {
     create: async(req, res) => {
@@ -115,7 +114,7 @@ const proyecto = {
             condicion = {
                 condicion: "id_usuario",
                 valor: userId
-            }
+            };
         }
 
         try{
