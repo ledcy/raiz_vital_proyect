@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.js";
 import proyectosRouter from "./routes/proyectos.js";
 import campañasRouter from "./routes/campañas.js";
-
+import donacionesRouter from "./routes/donaciones.js";
 const app = express();
 
 app.use(
@@ -28,6 +28,8 @@ app.use("/api/proyectos", proyectosRouter);
 app.use("/api/campaign", campañasRouter);
 
 app.use("/uploads", express.static("uploads"));
+
+app.use("/api/donacion", donacionesRouter)
 
 app.listen(3001, '0.0.0.0', () => {
   console.log("Backend corriendo en puerto 3001");
