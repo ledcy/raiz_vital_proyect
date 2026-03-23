@@ -1,6 +1,6 @@
 import nodeMailer from "nodemailer";
 
-export const emailSender = async(email, token) => {
+export const emailSender = async(email, token, res) => {
     try{
         const resetTokens = {}; // { token: email }
 
@@ -56,7 +56,6 @@ export const emailSender = async(email, token) => {
 
         return true;
     } catch(error){
-        console.log(error);
         return res.status(500).json({error: "Error al enviar el email"});
     }
 };

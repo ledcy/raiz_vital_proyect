@@ -13,8 +13,6 @@ const proyecto = {
                 throw new Error("La imagen es requerida");
             }
 
-            console.log(req.file);
-
             const nombreImagen = req.file.filename;
 
             if (!nombre || !fecha || !descripcion || !ubicacion || !categoria || !subcategoria || !objetivo) {
