@@ -8,8 +8,6 @@ const model = {
         const valores = condicion != null ? condicion.map(c => c.valor) : [];
         const sql = `${sqlSelect} ${sqlWhere}`;
 
-        //console.log(sql);
-
         return new Promise((resolve, reject) => {
             db.query(sql, condicion ? valores : [], (err, result) => {
                 if (err) {

@@ -1,13 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/auth/verify", {
+    fetch(API_URL+"/api/auth/verify", {
       credentials: "include",
     })
       .then((res) => res.json())

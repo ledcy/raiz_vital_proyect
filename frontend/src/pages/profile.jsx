@@ -5,6 +5,7 @@ import CardSimple from "../components/common/SimpleCard";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const Profile = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [userData, setUserData] = useState(null);
   const [projectData, setProjectData] = useState([]);
   const [campaignData, setCampaignData] = useState([]);
@@ -14,7 +15,7 @@ const Profile = () => {
   useEffect(() => {
     const obtenerPerfil = async () => {
       try {
-        const res = await fetch('http://localhost:3001/api/usuarios/profile', {
+        const res = await fetch(API_URL+'/api/usuarios/profile', {
           method: 'GET',
           credentials: 'include',
         });
@@ -36,7 +37,7 @@ const Profile = () => {
   }, []);
 
     const getProyectos = async () => {
-        const rest = await fetch(`http://localhost:3001/api/proyectos/get-proyectos?userId=${userData.id_usuario}`, {
+        const rest = await fetch(`${API_URL}/api/proyectos/get-proyectos?userId=${userData.id_usuario}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -52,7 +53,7 @@ const Profile = () => {
     };
 
     const getCampañas = async() => {
-        const rest = await fetch(`http://localhost:3001/api/campaign/get-campaign?userId=${userData.id_usuario}&userType=${userData.tipo_usuario}`, {
+        const rest = await fetch(`${API_URL}/api/campaign/get-campaign?userId=${userData.id_usuario}&userType=${userData.tipo_usuario}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -75,7 +76,7 @@ const Profile = () => {
     }, [userData]);
 
     const deleteProject = async(id_proyecto, portada) => {
-        const rest = await fetch(`http://localhost:3001/api/proyectos/delete-project?field=id_proyecto&value=${id_proyecto}&portada=${portada}`, {
+        const rest = await fetch(`${API_URL}/api/proyectos/delete-project?field=id_proyecto&value=${id_proyecto}&portada=${portada}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -92,7 +93,7 @@ const Profile = () => {
     };
 
     const deleteCampaign = async(id_campaña) => {
-        const rest = await fetch(`http://localhost:3001/api/campaign/delete-campaign?field=id_campaña&value=${id_campaña}`, {
+        const rest = await fetch(`${API_URL}/api/campaign/delete-campaign?field=id_campaña&value=${id_campaña}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -109,7 +110,7 @@ const Profile = () => {
     };
 
     const cancelRegistration = async(id_inscripcion) => {
-        const rest = await fetch(`http://localhost:3001/api/campaign/delete-registration?idInscripcion=${id_inscripcion}`, {
+        const rest = await fetch(`${API_URL}/api/campaign/delete-registration?idInscripcion=${id_inscripcion}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'

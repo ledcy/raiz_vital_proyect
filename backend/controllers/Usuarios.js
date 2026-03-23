@@ -85,7 +85,6 @@ const usuario = {
             });
             
         } catch (error) {
-            console.log(error);
             res.status(500).json({ error: "Error al iniciar sesión" });
         }
     },
@@ -193,7 +192,6 @@ const usuario = {
             });
             
         } catch (error) {
-            console.log(error);
             return res.status(500).json({error: "Error al registrar usuario"});
         }
     },
@@ -285,7 +283,6 @@ const usuario = {
 
             return res.status(200).json({message: "Peticion enviada"})
         } catch (error) {
-            console.log(error);
             return res.status(500).json({error: "Error del servidor"});
         }
     },
@@ -294,10 +291,13 @@ const usuario = {
         try {
             const {resetToken, newPassword, confirmPassword} = req.body;
             const columnas = ["email", "expires_at"];
-            const condicionReset = {
-                condicion: "token",
-                valor: resetToken
-            };
+            const condicionReset = [
+                {
+                    condicion: "token",
+                    valor: resetToken
+                }
+            ];
+
 
             const dataToken = await model.select("password_resets", columnas, condicionReset);
 
@@ -328,12 +328,10 @@ const usuario = {
                 }
             ];
 
-            const condicion = [
-                {
-                    condicion: "email",
-                    valor: email
-                }
-            ];
+            const condicion = {
+                condicion: "email",
+                valor: email
+            };
 
             model.update("usuario", data, condicion);
 
@@ -346,7 +344,6 @@ const usuario = {
 
             return res.status(200).json({message: "Contraseña reestablecida correctamente"});
         } catch (error) {
-            console.log(error);
             return res.status(500).json({error: "Error al actualizar contraseña"});
         }
     },

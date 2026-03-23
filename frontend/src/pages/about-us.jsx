@@ -7,7 +7,7 @@ function AboutUs() {
   useEffect(() => {
     const obtenerUsuarios = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/usuarios/users");
+        const res = await fetch(API_URL+"/api/usuarios/users");
         const data = await res.json();
         if (res.ok) {
           setUsuarios(data);

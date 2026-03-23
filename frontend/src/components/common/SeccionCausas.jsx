@@ -4,6 +4,7 @@ import Card from './Card';
 import CardSimple from './SimpleCard';
 import { HeartIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { sileo } from "sileo";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SeccionCausas = () => {
 
@@ -15,7 +16,7 @@ const SeccionCausas = () => {
     const projectsMostar = mostrarCards ? dataProjects : dataProjects.slice(-3);
 
     const getProyectos = async () => {
-        const rest = await fetch('http://localhost:3001/api/proyectos/get-proyectos', {
+        const rest = await fetch(API_URL+'/api/proyectos/get-proyectos', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -31,7 +32,7 @@ const SeccionCausas = () => {
     };
 
     const getCampaigns = async () => {
-        const rest = await fetch('http://localhost:3001/api/campaign/get-campaign', {
+        const rest = await fetch(API_URL+'/api/campaign/get-campaign', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include'
@@ -47,7 +48,7 @@ const SeccionCausas = () => {
     };
 
     const inscripcionCampaña = async (id_campaña) => {
-        const rest = await fetch('http://localhost:3001/api/campaign/create-campaign-registration', {
+        const rest = await fetch(API_URL+'/api/campaign/create-campaign-registration', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json'},
             credentials: 'include',

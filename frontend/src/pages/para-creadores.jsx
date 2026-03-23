@@ -4,6 +4,7 @@ import { useAuth } from "../../routes/authContext.jsx";
 import { sileo } from "sileo";
 
 function ParaCreadores(){
+  const API_URL = import.meta.env.VITE_API_URL;
   const [showForm, setShowForm] = useState(false);
   const [showFormCampaign, setShowFormCampaign] = useState(false);
 
@@ -76,7 +77,7 @@ function ParaCreadores(){
     formData.append('objetivo', objetivo);
     formData.append('imagen', imagen);
 
-    const rest = await fetch('http://localhost:3001/api/proyectos/crear-proyecto', {
+    const rest = await fetch(API_URL+'/api/proyectos/crear-proyecto', {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -97,7 +98,7 @@ function ParaCreadores(){
   const handleSubmitCampaign = async (e) => {
     e.preventDefault();
 
-    const rest = await fetch('http://localhost:3001/api/campaign/create-campaign', {
+    const rest = await fetch(API_URL+'/api/campaign/create-campaign', {
       method: 'POST',
       headers: { "Content-Type": "application/json" },
       credentials: 'include',
