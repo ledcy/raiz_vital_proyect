@@ -4,6 +4,7 @@ import Card from './Card';
 import CardSimple from './SimpleCard';
 import { HeartIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { sileo } from "sileo";
+import { useNavigate } from "react-router-dom";
 const API_URL = import.meta.env.VITE_API_URL;
 
 const SeccionCausas = () => {
@@ -14,6 +15,8 @@ const SeccionCausas = () => {
     const [tipoVista, setTipoVista] = useState("proyectos"); 
 
     const projectsMostar = mostrarCards ? dataProjects : dataProjects.slice(-3);
+
+    const navigate = useNavigate();
 
     const getProyectos = async () => {
         const rest = await fetch(API_URL+'/api/proyectos/get-proyectos', {
@@ -115,7 +118,7 @@ const SeccionCausas = () => {
                     key={proyecto.id_proyecto}
                     info={proyecto}
                     acciones={[
-                        { texto: "Patrocina este proyecto", icon: HeartIcon, onClick: () => console.log("Patrocinar") }
+                        { texto: "Patrocina este proyecto", icon: HeartIcon, onClick: () => navigate(`/donar?id=${proyecto.id_proyecto}`)}
                     ]}
                     />
                 ))}

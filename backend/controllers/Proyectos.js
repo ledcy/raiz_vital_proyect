@@ -104,7 +104,7 @@ const proyecto = {
     },
 
     retrieve: async(req, res) => {
-        const {userId} = req.query;
+        const {userId, idProyecto} = req.query;
 
         var condicion = null;
 
@@ -112,6 +112,12 @@ const proyecto = {
             condicion = {
                 condicion: "id_usuario",
                 valor: userId
+            };
+        }
+        if(idProyecto){
+            condicion = {
+                condicion: "p.id_proyecto",
+                valor: idProyecto
             };
         }
 

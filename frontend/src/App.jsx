@@ -13,6 +13,7 @@ import RestorePassword from "./pages/recuperar-contraseña.jsx";
 
 import PublicRoute from "../routes/PublicRoute.jsx";
 import PrivateRoute from "../routes/privateRoute.jsx";
+import DonarPage from "./pages/donar.jsx";
 
 function App() {
   return (
@@ -48,6 +49,8 @@ function App() {
         <Route path="/recuperar-contraseña" element={<RestorePassword />}/>
 
         <Route path="*" element={<NotFound />} />
+
+        <Route path="/donar" element={<DonarPage/>} />
       </Routes>
       <Footer />
     </div>
