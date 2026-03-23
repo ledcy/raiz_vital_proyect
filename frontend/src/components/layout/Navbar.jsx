@@ -2,6 +2,8 @@ import { useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../routes/authContext.jsx";
+import { sileo } from "sileo";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +12,7 @@ const Navbar = () => {
 
   async function handleLogout() {
     try {
-      const restApi = await fetch("http://localhost:3001/api/usuarios/logout", {
+      const restApi = await fetch(API_URL+"/api/usuarios/logout", {
         method: "POST",
         credentials: "include",
       });

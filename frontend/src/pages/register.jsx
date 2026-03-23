@@ -3,6 +3,7 @@ import { useState } from "react";
 import { sileo } from "sileo";
 
 function Register() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [tipoUsuario, setTipoUsuario] = useState("usuario");
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ function Register() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3001/api/usuarios/register", {
+      const res = await fetch(API_URL+"/api/usuarios/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

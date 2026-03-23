@@ -1,6 +1,8 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function PrivateRoute({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useState(false);
@@ -8,7 +10,7 @@ export default function PrivateRoute({ children }) {
   useEffect(() => {
     const verificarSesion = async () => {
       try {
-        const res = await fetch("http://localhost:3001/api/usuarios/profile", {
+        const res = await fetch(API_URL+"/api/usuarios/profile", {
           credentials: "include", 
         });
 

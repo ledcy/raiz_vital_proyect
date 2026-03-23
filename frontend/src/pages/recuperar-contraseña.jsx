@@ -4,6 +4,7 @@ import { sileo } from "sileo";
 import { Link } from "react-router-dom";
 
 const RestorePassword = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [step, setStep] = useState("form"); // form | confirm | reset
     const [email, setEmail] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -24,7 +25,7 @@ const RestorePassword = () => {
     const handlePasswordReset = async(e) => {
         e.preventDefault();
 
-        const rest = await fetch("http://localhost:3001/api/usuarios/reset-password", {
+        const rest = await fetch(API_URL+"/api/usuarios/reset-password", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
@@ -43,7 +44,7 @@ const RestorePassword = () => {
     const handleNewPassword = async(e) => {
         e.preventDefault();
         
-        const rest = await fetch("http://localhost:3001/api/usuarios/new-password", {
+        const rest = await fetch(API_URL+"/api/usuarios/new-password", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             credentials: 'include',

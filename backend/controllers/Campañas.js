@@ -111,7 +111,6 @@ const campaña = {
             res.json(campañas);
             
         } catch(error){
-            console.log(error);
             return res.status(500).json({ error: "Error al obtener campañas" });
         }
     },
@@ -175,7 +174,6 @@ const campaña = {
 
             return res.status(200).json({message: "Inscripcion satisfactoria"});
         } catch (error) {
-            console.log(error);
             res.status(500).json({error: "Error al inscribirse a campaña"});
         }
     },

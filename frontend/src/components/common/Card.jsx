@@ -1,7 +1,8 @@
 import { GlobeAmericasIcon } from "@heroicons/react/24/outline";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Card = ({ info, acciones }) => {
-  const rutaImg = `http://localhost:3001/uploads/${info.portada}`;
+  const rutaImg = `${API_URL}/uploads/${info.portada}`;
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-shadow border border-gray-100 flex flex-col">
       {/* Imagen con Aspect Ratio */}
